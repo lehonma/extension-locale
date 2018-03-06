@@ -1,12 +1,18 @@
 package extension.locale;
 
+#if (android && openfl_legacy)
+import openfl.utils.JNI;
+#elseif (android && lime >= "2.5.3") //2.5.3 lime ports JNI back
+import lime.system.JNI;
+#end
+
 class Locale {
 
 	private static var _getLangCode:Void->String =
 		#if android
 			function():String {
-				var getDefault:Void->Dynamic = openfl.utils.JNI.createStaticMethod("java/util/Locale", "getDefault", "()Ljava/util/Locale;");
-				var toString:Dynamic->String = openfl.utils.JNI.createMemberMethod("java/util/Locale", "toString", "()Ljava/lang/String;");
+				var getDefault:Void->Dynamic = JNI.createStaticMethod("java/util/Locale", "getDefault", "()Ljava/util/Locale;");
+				var toString:Dynamic->String = JNI.createMemberMethod("java/util/Locale", "toString", "()Ljava/lang/String;");
 				return toString(getDefault());
 			}
 		#elseif (openfl && neko)
